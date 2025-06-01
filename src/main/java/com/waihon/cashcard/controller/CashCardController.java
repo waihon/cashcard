@@ -1,6 +1,7 @@
 package com.waihon.cashcard.controller;
 
 import com.waihon.cashcard.entity.CashCard;
+import com.waihon.cashcard.repository.CashCardRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 // to access this Controller.
 @RequestMapping("/cashcards")
 class CashCardController {
+
+    private final CashCardRepository cashCardRepository;
+
+    private CashCardController(CashCardRepository cashCardRepository) {
+        this.cashCardRepository = cashCardRepository;
+    }
 
     // @GetMapping marks a method as a handler method. GET requests that matches
     // cashcards/{requestedId} will be handled by this method.
