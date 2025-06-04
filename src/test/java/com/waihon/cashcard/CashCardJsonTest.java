@@ -29,7 +29,7 @@ public class CashCardJsonTest {
     void setUp() {
         cashCards = Arrays.array(
                 new CashCard(99L, 123.45),
-                new CashCard(100L, 100.00),
+                new CashCard(100L, 1.00),
                 new CashCard(101L, 150.00));
     }
 
@@ -61,6 +61,11 @@ public class CashCardJsonTest {
                 .isEqualTo(new CashCard(99L, 123.45));
         assertThat(json.parseObject(expected).id()).isEqualTo(99);
         assertThat(json.parseObject(expected).amount()).isEqualTo(123.45);
+    }
+
+    @Test
+    void cashCardListSerializationTest() throws IOException {
+        assertThat(jsonList.write(cashCards)).isStrictlyEqualToJson("list.json");
     }
 
 }
