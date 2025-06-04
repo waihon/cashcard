@@ -20,6 +20,9 @@ public class CashCardJsonTest {
     @Autowired
     private JacksonTester<CashCard> json;
 
+    @Autowired
+    private JacksonTester<CashCard[]> jsonList;
+
     private CashCard[] cashCards;
 
     @BeforeEach
