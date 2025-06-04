@@ -3,10 +3,7 @@ package com.waihon.cashcard.controller;
 import com.waihon.cashcard.entity.CashCard;
 import com.waihon.cashcard.repository.CashCardRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,5 +33,11 @@ class CashCardController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping
+    private ResponseEntity<Void> createCashCard() {
+        // By returning nothing at all, Spring Web will automatically generate an HTTP Response Status code of 200 OK.
+        return null;
     }
 }
