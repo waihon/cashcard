@@ -2,6 +2,7 @@ package com.waihon.cashcard.controller;
 
 import com.waihon.cashcard.entity.CashCard;
 import com.waihon.cashcard.repository.CashCardRepository;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -54,5 +55,10 @@ class CashCardController {
                 .toUri();
         // Returns 201 CREATED with the correct Location header
         return ResponseEntity.created(locationOfNewCashCard).build();
+    }
+
+    @GetMapping()
+    private ResponseEntity<Iterable<CashCard>> findAll() {
+        return ResponseEntity.ok(cashCardRepository.findAll());
     }
 }
