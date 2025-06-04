@@ -39,7 +39,7 @@ public class CashCardJsonTest {
     void cashCardSerializationTest() throws IOException {
         CashCard cashCard = cashCards[0];
         var serializedCard = json.write(cashCard);
-        assertThat(serializedCard).isStrictlyEqualToJson("expected.json");
+        assertThat(serializedCard).isStrictlyEqualToJson("single.json");
         assertThat(serializedCard).hasJsonPathNumberValue("@.id");
         assertThat(serializedCard).extractingJsonPathNumberValue("@.id").isEqualTo(99);
         assertThat(serializedCard).hasJsonPathNumberValue("@.amount");
