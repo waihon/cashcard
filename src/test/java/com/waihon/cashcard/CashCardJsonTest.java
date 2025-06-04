@@ -1,6 +1,8 @@
 package com.waihon.cashcard;
 
 import com.waihon.cashcard.entity.CashCard;
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -18,6 +20,16 @@ public class CashCardJsonTest {
     @Autowired
     private JacksonTester<CashCard> json;
 
+    private CashCard[] cashCards;
+
+    @BeforeEach
+    void setUp() {
+        cashCards = Arrays.array(
+                new CashCard(99L, 123.45),
+                new CashCard(100L, 100.00),
+                new CashCard(101L, 150.00));
+    }
+
     @Test
     void myFirstTest() {
         assertThat(42).isEqualTo(42);
@@ -25,7 +37,7 @@ public class CashCardJsonTest {
 
     @Test
     void cashCardSerializationTest() throws IOException {
-        CashCard cashCard = new CashCard(99L, 123.45);
+        CashCard cashCard = cashCards[0];
         var serializedCard = json.write(cashCard);
         assertThat(serializedCard).isStrictlyEqualToJson("expected.json");
         assertThat(serializedCard).hasJsonPathNumberValue("@.id");
