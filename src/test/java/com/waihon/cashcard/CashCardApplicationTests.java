@@ -18,7 +18,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 // Start Spring Boot application and make it available for our test to perform requests to it.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+// Cause Spring to start with a clean slate, as if those other tests hadn't been run.
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CashCardApplicationTests {
 
 	// Ask Spring to inject a test helper that'll allow us to make HTTP requests to the
@@ -55,6 +56,7 @@ class CashCardApplicationTests {
 	}
 
 	@Test
+	@DirtiesContext
 	void shouldCreateANewCashCard() {
 		// The database will create and manage all unique CashCard.id values for us. We shouldn't provide one.
 		// Besides, we must also provide newCashCard data for the new CashCard.
