@@ -148,4 +148,18 @@ class CashCardApplicationTests {
 		assertThat(amounts).asList().containsExactly(1.00, 123.45, 150.0);
 	}
 
+	@Test
+	void shouldNotReturnACashCardWhenUsingBadCredentials() {
+		ResponseEntity<String> response = restTemplate
+				.withBasicAuth("BAD-USER", "abc123")
+				.getForEntity("/cashcards/99", String.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+		response = restTemplate
+				.withBasicAuth("sarah1", "BAD-PASSWORD")
+				.getForEntity("/cashcards/99", String.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+	}
+
 }
