@@ -2,6 +2,7 @@ package com.waihon.cashcard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +16,14 @@ class SecurityConfig {
     // return a SecurityFilterChain with the @Bean satisfies this expectation.
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // Minimum needed for now
+        // All HTTP requests to cashcards/ endpoints are required to be authenticated.
+        http.authorizeHttpRequests(request -> request
+                .requestMatchers("/cashcards/**")
+                .authenticated());
+        // Enable HTTP Basic Authentication security (username and password) with default settings.
+        http.httpBasic(Customizer.withDefaults());
+        // Do not require CSRF security
+        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 
