@@ -60,7 +60,7 @@ class CashCardApplicationTests {
 	void shouldCreateANewCashCard() {
 		// The database will create and manage all unique CashCard.id values for us. We shouldn't provide one.
 		// Besides, we must also provide newCashCard data for the new CashCard.
-		CashCard newCashCard = new CashCard(null, 250.00);
+		CashCard newCashCard = new CashCard(null, 250.00, "sarah1");
 		// In addition, we don't expect a CashCard to be returned to us, so we expect a Void response body.
 		ResponseEntity<Void> createResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
 		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
