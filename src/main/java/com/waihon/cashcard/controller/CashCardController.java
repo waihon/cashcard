@@ -71,7 +71,8 @@ class CashCardController {
                 // some types of Spring Data Repositories.
                 PageRequest.of(
                         pageable.getPageNumber(),
-                        pageable.getPageSize()
+                        pageable.getPageSize(),
+                        pageable.getSort()
                 )
         );
         return ResponseEntity.ok(page.getContent());
