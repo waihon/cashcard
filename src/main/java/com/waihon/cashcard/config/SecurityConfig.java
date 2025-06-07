@@ -4,8 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 // Tells Spring to use this class to configure Spring and Spring Boot itself.
@@ -30,5 +34,18 @@ class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // Spring's IoC container will find the UserDetailsService bean and Spring Data
+    // will use it when needed.
+    @Bean
+    UserDetailsService testOnlyUsers(PasswordEncoder passwordEncoder) {
+        User.UserBuilder user = User.builder();
+        UserDetails sarah = user
+                .username("sarah1")
+                .password(passwordEncoder.encode("abc123"))
+                .roles() // No roles for now
+                .build();
+        return new InMemoryUserDetailsManager(sarah);
     }
 }
