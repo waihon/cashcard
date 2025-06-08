@@ -67,8 +67,8 @@ class CashCardController {
     @GetMapping()
     // Since we specified the URI parameters of page=0&size=1, pageable will contain
     // the values we need.
-    private ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
-        Page<CashCard> page = cashCardRepository.findAll(
+    private ResponseEntity<List<CashCard>> findAll(Pageable pageable, Principal principal) {
+        Page<CashCard> page = cashCardRepository.findByOwner(principal.getName(),
                 // PageRequest is a basic Java Bean implementation of Pageable. Things that
                 // want paging and sorting implementation often support this, such has
                 // some types of Spring Data Repositories.
