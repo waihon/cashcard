@@ -23,7 +23,9 @@ class SecurityConfig {
         // All HTTP requests to cashcards/ endpoints are required to be authenticated.
         http.authorizeHttpRequests(request -> request
                 .requestMatchers("/cashcards/**")
-                .authenticated());
+                // Enable Role-Based Access Control (RBAC) to restrict access to only users with the
+                // CARD-OWNER role.
+                .hasRole("CARD-OWNER"));
         // Enable HTTP Basic Authentication security (username and password) with default settings.
         http.httpBasic(Customizer.withDefaults());
         // Do not require CSRF security
