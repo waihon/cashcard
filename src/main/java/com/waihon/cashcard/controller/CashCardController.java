@@ -50,10 +50,12 @@ class CashCardController {
     // Spring Web will deserialize the data into a CashCard for us.
     // UriComponentsBuilder is automatically injected from Spring's IoC Container.
     private ResponseEntity<Void> createCashCard(@RequestBody CashCard newCashCardRequest,
-                                                UriComponentsBuilder ucb) {
+                                                UriComponentsBuilder ucb,
+                                                Principal principal) {
+        CashCard cashCardWithOwner = new CashCard(null, newCashCardRequest.amount(), principal.getName());
         // The save method saves a new CashCard for us, and returns the saved object
         // with a unique id provided by the database.
-        CashCard savedCashCard = cashCardRepository.save(newCashCardRequest);
+        CashCard savedCashCard = cashCardRepository.save(cashCardWithOwner);
         // This is constructing a URI to the newly created CashCard. This is the URI
         // that the caller can then use to GET the newly-created CashCard.
         URI locationOfNewCashCard = ucb
