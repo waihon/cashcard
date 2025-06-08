@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +35,9 @@ class CashCardController {
     @GetMapping("/{requestedId}")
     // @PathVariable makes Spring Web aware of the requestedId supplied in the HTTP request.
     // Now it's available for us to use in our handler method.
-    private ResponseEntity<CashCard> findById(@PathVariable Long requestedId) {
-        Optional<CashCard> cashCardOptional = cashCardRepository.findById(requestedId);
+    private ResponseEntity<CashCard> findById(@PathVariable Long requestedId, Principal principal) {
+        // principal.getName() will return the username provided from Basic Auth.
+        Optional<CashCard> cashCardOptional = Optional.ofNullable(cashCardRepository.findByIdAndOwner(requestedId, principal.getName()));
         if (cashCardOptional.isPresent()) {
             return ResponseEntity.ok(cashCardOptional.get());
         } else {
@@ -48,10 +50,12 @@ class CashCardController {
     // Spring Web will deserialize the data into a CashCard for us.
     // UriComponentsBuilder is automatically injected from Spring's IoC Container.
     private ResponseEntity<Void> createCashCard(@RequestBody CashCard newCashCardRequest,
-                                                UriComponentsBuilder ucb) {
+                                                UriComponentsBuilder ucb,
+                                                Principal principal) {
+        CashCard cashCardWithOwner = new CashCard(null, newCashCardRequest.amount(), principal.getName());
         // The save method saves a new CashCard for us, and returns the saved object
         // with a unique id provided by the database.
-        CashCard savedCashCard = cashCardRepository.save(newCashCardRequest);
+        CashCard savedCashCard = cashCardRepository.save(cashCardWithOwner);
         // This is constructing a URI to the newly created CashCard. This is the URI
         // that the caller can then use to GET the newly-created CashCard.
         URI locationOfNewCashCard = ucb
@@ -65,8 +69,8 @@ class CashCardController {
     @GetMapping()
     // Since we specified the URI parameters of page=0&size=1, pageable will contain
     // the values we need.
-    private ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
-        Page<CashCard> page = cashCardRepository.findAll(
+    private ResponseEntity<List<CashCard>> findAll(Pageable pageable, Principal principal) {
+        Page<CashCard> page = cashCardRepository.findByOwner(principal.getName(),
                 // PageRequest is a basic Java Bean implementation of Pageable. Things that
                 // want paging and sorting implementation often support this, such has
                 // some types of Spring Data Repositories.
