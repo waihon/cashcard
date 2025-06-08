@@ -64,7 +64,8 @@ class CashCardApplicationTests {
 	void shouldCreateANewCashCard() {
 		// The database will create and manage all unique CashCard.id values for us. We shouldn't provide one.
 		// Besides, we must also provide newCashCard data for the new CashCard.
-		CashCard newCashCard = new CashCard(null, 250.00, "sarah1");
+		// However, we don't need to submit an owner. So, we'll use null as the owner for the CashCard.
+		CashCard newCashCard = new CashCard(null, 250.00, null);
 		// In addition, we don't expect a CashCard to be returned to us, so we expect a Void response body.
 		ResponseEntity<Void> createResponse = restTemplate
 				.withBasicAuth("sarah1", "abc123")
