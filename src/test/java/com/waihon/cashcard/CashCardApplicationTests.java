@@ -182,6 +182,7 @@ class CashCardApplicationTests {
 	}
 
 	@Test
+	@DirtiesContext
 	void shouldUpdateAnExistingCashCard() {
 		CashCard cashCardUpdate = new CashCard(null, 19.99, null);
 		// Create the HttpEntity that the exchange() method needs.
