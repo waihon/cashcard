@@ -91,6 +91,9 @@ class CashCardController {
         // Scope our retrieval of the CashCard to the submitted requestedId and Principal to ensure only the authenticated,
         // authorized owner may update this CashCard.
         CashCard cashCard = cashCardRepository.findByIdAndOwner(requestedId, principal.getName());
+        if (cashCard == null) {
+            return ResponseEntity.notFound().build();
+        }
         // Build a CashCard with updated values and save it.
         CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
         cashCardRepository.save(updatedCashCard);
