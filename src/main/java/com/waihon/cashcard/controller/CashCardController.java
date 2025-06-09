@@ -37,9 +37,9 @@ class CashCardController {
     // Now it's available for us to use in our handler method.
     private ResponseEntity<CashCard> findById(@PathVariable Long requestedId, Principal principal) {
         // principal.getName() will return the username provided from Basic Auth.
-        Optional<CashCard> cashCardOptional = Optional.ofNullable(cashCardRepository.findByIdAndOwner(requestedId, principal.getName()));
-        if (cashCardOptional.isPresent()) {
-            return ResponseEntity.ok(cashCardOptional.get());
+        CashCard cashCard= cashCardRepository.findByIdAndOwner(requestedId, principal.getName());
+        if (cashCard != null) {
+            return ResponseEntity.ok(cashCard);
         } else {
             return ResponseEntity.notFound().build();
         }
