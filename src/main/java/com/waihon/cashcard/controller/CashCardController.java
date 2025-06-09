@@ -37,9 +37,9 @@ class CashCardController {
     // Now it's available for us to use in our handler method.
     private ResponseEntity<CashCard> findById(@PathVariable Long requestedId, Principal principal) {
         // principal.getName() will return the username provided from Basic Auth.
-        Optional<CashCard> cashCardOptional = Optional.ofNullable(cashCardRepository.findByIdAndOwner(requestedId, principal.getName()));
-        if (cashCardOptional.isPresent()) {
-            return ResponseEntity.ok(cashCardOptional.get());
+        CashCard cashCard= findCashCard(requestedId, principal);
+        if (cashCard != null) {
+            return ResponseEntity.ok(cashCard);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -83,5 +83,24 @@ class CashCardController {
                 )
         );
         return ResponseEntity.ok(page.getContent());
+    }
+
+    @PutMapping("/{requestedId}")
+    // Add the Principal as a method argument, provided automatically by Spring Security.
+    private ResponseEntity<Void> putCashCard(@PathVariable Long requestedId, @RequestBody CashCard cashCardUpdate, Principal principal) {
+        // Scope our retrieval of the CashCard to the submitted requestedId and Principal to ensure only the authenticated,
+        // authorized owner may update this CashCard.
+        CashCard cashCard = findCashCard(requestedId, principal);
+        if (cashCard == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Build a CashCard with updated values and save it.
+        CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
+        cashCardRepository.save(updatedCashCard);
+        return ResponseEntity.noContent().build();
+    }
+
+    private CashCard findCashCard(Long requestedId, Principal principal) {
+        return cashCardRepository.findByIdAndOwner(requestedId, principal.getName());
     }
 }
