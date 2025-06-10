@@ -225,4 +225,23 @@ class CashCardApplicationTests {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
+	@Test
+	// We add this annotation to all tests which change the data. If we don't, then these tests
+	// could affect the result of other tests in the file.
+	@DirtiesContext
+	void shouldDeleteAnExistingCashCard() {
+		ResponseEntity<Void> response = restTemplate
+				.withBasicAuth("sarah1", "abc123")
+				// The Spring Web framework supplies the delete() method as a convenience,
+				// but it comes with some assumptions:
+				// 1. A response to a DELETE request will have no body.
+				// 2. The client shouldn't care what the response code is unless it's an error,
+				//    in which case, it'll throw an exception.
+				// Given those assumptions, no return value is needed from delete().
+				// But, the second assumption make delete() unsuitable for us: We need the
+				// ResponseEntity in order to assert on the satus code!
+				.exchange("/cashcards/99", HttpMethod.DELETE, null, Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+	}
+
 }
